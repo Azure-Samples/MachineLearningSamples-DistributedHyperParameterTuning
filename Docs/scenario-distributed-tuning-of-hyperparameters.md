@@ -1,4 +1,4 @@
-# Large-scale Hyperparameter Tuning using Vienna
+# Large-scale Hyperparameter Tuning using Azure Machine Learning
 
 ## Link of the Gallery GitHub repository
 Following is the link to the public GitHub repository: 
