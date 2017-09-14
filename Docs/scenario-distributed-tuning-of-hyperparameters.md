@@ -1,25 +1,22 @@
 # Large-scale Hyperparameter Tuning using Vienna
 
-![Data_Diagram](https://www.usb-antivirus.com/wp-content/uploads/2014/11/tutorial-windwos-10-2-320x202.png)
+## Link of the Gallery GitHub repository
+Following is the link to the public GitHub repository: 
 
-* Documentation site for Microsoft internal dogfooders.
-* Documentation site for external private preview customers.
-
-Leave the image icon and the document links as what it is right now. We update later.
-
-**The above info will be included in the Readme on GitHub**
+[https://github.com/Azure/MachineLearningSamples-SentimentAnalysis](https://github.com/Azure/MachineLearningSamples-SentimentAnalysis)
 
 ## Prerequisites
 
-1. Make sure that you have properly installed Azure ML Workbench by following the [installation guide](https://github.com/Azure/ViennaDocs/blob/master/Documentation/Installation.md).
-2. This tutorial assumes that you are running Azure ML Workbench on Windows 10 or MacOS with Docker engine locally installed. 
-3. To run tutorial with remote docker, provision Ubuntu Data Science Virtual Machine (DSVM) by following the instructions [here](https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-data-science-provision-vm). We recommend using a virtual machine with at least 8 cores and 28 Gb of memory.
-4. To run this tutorial with Spark cluster, provision HDInsight cluster by following the instructions [here](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apache-spark-jupyter-spark-sql). We recommend having a cluster with at least four worker nodes and at least 28 Gb of memory in each node. To maximize performance of the cluster, we recommend to change the parameters spark.executor.instances, spark.executor.cores, and spark.executor.memory by following the instructions [here](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apache-spark-resource-manager) and editing the definitions in "custom spark defaults" section.
-5. Create Azure storage account that is used for storing dataset. You can find instructions for creating storage account [here](https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account).
+1. An [Azure account](https://azure.microsoft.com/en-us/free/) (free trials are available).
+2. An installed copy of [Azure Machine Learning Workbench](./overview-what-is-azure-ml.md) following the [quick start installation guide](./quick-start-installation.md) to install the program and create a workspace.
+3. This scenario assumes that you are running Azure ML Workbench on Windows 10 or MacOS with Docker engine locally installed. 
+4. To run scenario with remote docker, provision Ubuntu Data Science Virtual Machine (DSVM) by following the instructions [here](https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-data-science-provision-vm). We recommend using a virtual machine with at least 8 cores and 28 Gb of memory.
+5. To run this scenario with Spark cluster, provision HDInsight cluster by following the instructions [here](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apache-spark-jupyter-spark-sql). We recommend having a cluster with at least four worker nodes and at least 28 Gb of memory in each node. To maximize performance of the cluster, we recommend to change the parameters spark.executor.instances, spark.executor.cores, and spark.executor.memory by following the instructions [here](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apache-spark-resource-manager) and editing the definitions in "custom spark defaults" section.
+6. Create Azure storage account that is used for storing dataset. You can find instructions for creating storage account [here](https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account).
 
-## Tutorial Introduction
+## Introduction
 
-This tutorial shows how to use Vienna to scale out tuning of hyperparameters of machine learning algorithms that implement scikit-learn API. We show how to configure and use remote docker and Spark cluster as an execution backend for tuning hyperparameters.
+This scenario shows how to use Vienna to scale out tuning of hyperparameters of machine learning algorithms that implement scikit-learn API. We show how to configure and use remote docker and Spark cluster as an execution backend for tuning hyperparameters.
 
 ## Use Case Overview
 
@@ -33,8 +30,8 @@ Grid search using cross-validation can be time-consuming. If an algorithm has 5 
 
 We use [TalkingData dataset](https://www.kaggle.com/c/talkingdata-mobile-user-demographics/data). This dataset has events from the apps in cell phones. The goal is to predict gender and age category of cell phone user given the type of the phone and the events that the user generated recently.  
 
-## Tutorial Structure
-This tutorial has multiple folders in GitHub repository. Code and configuration files are in **Code** folder, all documentation is in **Docs** folder and all images are **Images** folder. The root folder has README file that contains a brief summary of this tutorial.
+## Scenario Structure
+This scenario has multiple folders in GitHub repository. Code and configuration files are in **Code** folder, all documentation is in **Docs** folder and all images are **Images** folder. The root folder has README file that contains a brief summary of this scenario.
 
 ### Configuration of Execution Environments
 We run our code in remote Docker and in Spark. We also use [scikit-learn](https://anaconda.org/conda-forge/scikit-learn), [xgboost](https://anaconda.org/conda-forge/xgboost), and [azure-storage](https://pypi.python.org/pypi/azure-storage) packages that are not provided in the default Docker container of Azure Machine Learning Workbench. azure-storage package requires installation of [cryptography](https://pypi.python.org/pypi/cryptography) and [azure](https://pypi.python.org/pypi/azure) packages. To install these packages in Docker image and Spark we modify conda_dependencies.yml file:
@@ -96,7 +93,7 @@ with the name of the cluster, cluster's SSH user name and password. The default 
 ![Cluster name](../Images/cluster_name.png)
 
 ### Data Ingestion
-The code in this tutorial assumes that the data is stored in Azure blob storage. We show initially how to download data from Kaggle site to your computer and upload it to the blob storage. Then we show how to read the data from blob storage. 
+The code in this scenario assumes that the data is stored in Azure blob storage. We show initially how to download data from Kaggle site to your computer and upload it to the blob storage. Then we show how to read the data from blob storage. 
 
 To download data from Kaggle, go to [dataset page](https://www.kaggle.com/c/talkingdata-mobile-user-demographics/data) and click Download button. You will be asked to log in to Kaggle. After logging in, you will be redirected back to dataset page. Then download each file in the right column by selecting it and clicking Download button. The total size of seven files in the dataset is 289 Mb. To upload these files to blob storage, create blob storage container 'dataset' in your storage account. You can do that by going to Azure page of your storage account, clicking Blobs and then clicking +Container. Enter 'dataset' as Name and click OK. The following screenshots illustrate these steps:
 
@@ -271,7 +268,7 @@ The following diagram shows end-to-end workflow:
 
 ## Conclusion 
 
-In this tutorial, we showed how to use AML Workbench to perform tuning of hyperparameter in remote virtual machine and in remote Spark cluster. We saw that AML Workbench provides tools for easy configuration of execution environments and switching between them. 
+In this scenario, we showed how to use AML Workbench to perform tuning of hyperparameter in remote virtual machine and in remote Spark cluster. We saw that AML Workbench provides tools for easy configuration of execution environments and switching between them. 
 
 ## Acknowledgements
 
@@ -284,5 +281,3 @@ We would like to thank Kaggle user dune\_dweller for creating [A linear model on
 ## Contact
 
 Feel free to contact Dmitry Pechyoni (dmpechyo@microsoft.com) with any question or comment.
-
-
