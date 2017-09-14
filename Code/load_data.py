@@ -5,6 +5,7 @@ import re
 def load_data():
 
     # Define storage parameters 
+    #[comment: is this public or should this be passed in as parameters?]
     ACCOUNT_NAME = "viennatesting"
     ACCOUNT_KEY = "Gc+sxnQOCpdha3ombGfkzsM3+liy4Wh4mgITTv9+CHrQ+CJHosJZ8VeAEqV/Ufx+hUp60BDcaPRf9axfhuZUPQ=="
     CONTAINER_NAME = "dataset"
