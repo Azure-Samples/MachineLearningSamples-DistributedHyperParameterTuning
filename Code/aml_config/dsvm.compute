@@ -1,0 +1,7 @@
+address: 52.183.91.221
+baseDockerImage: microsoft/mmlspark:plus-0.7.dev7_2.gcfbc920
+nativeSharedDirectory: ~/.azureml/share/
+password: AzureMlSecret=dsvm#pechyony#8f1f946409b04543be020e0ce55c4116
+sharedVolumes: true
+type: remotedocker
+username: pechyony

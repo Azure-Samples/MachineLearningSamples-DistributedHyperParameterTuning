@@ -1,0 +1,6 @@
+type: "docker"
+baseDockerImage: "microsoft/mmlspark:plus-0.7.dev7_2.gcfbc920"
+
+# Enabling Docker shared volumes will increase increase execution performance,
+# but the shared volume feature of Docker isn't stable on Windows yet.
+sharedVolumes: true

@@ -1,0 +1,5 @@
+address: dmitryspark-ssh.azurehdinsight.net
+password: AzureMlSecret=spark#sshuser#c242526cfb1d4f6ba46aa42d890ba642
+type: cluster
+username: sshuser
+yarnDeployMode: cluster
