@@ -1,4 +1,4 @@
-# Large-scale Hyperparameter Tuning using Vienna
+# Large-scale Hyperparameter Tuning using Vienna [Comment: AML Workbench?]
 
 ![Data_Diagram](https://www.usb-antivirus.com/wp-content/uploads/2014/11/tutorial-windwos-10-2-320x202.png)
 
@@ -14,12 +14,12 @@ Leave the image icon and the document links as what it is right now. We update l
 1. Make sure that you have properly installed Azure ML Workbench by following the [installation guide](https://github.com/Azure/ViennaDocs/blob/master/Documentation/Installation.md).
 2. This tutorial assumes that you are running Azure ML Workbench on Windows 10 or MacOS with Docker engine locally installed. 
 3. To run tutorial with remote docker, provision Ubuntu Data Science Virtual Machine (DSVM) by following the instructions [here](https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-data-science-provision-vm). We recommend using a virtual machine with at least 8 cores and 28 Gb of memory.
-4. To run this tutorial with Spark cluster, provision HDInsight cluster by following the instructions [here](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apache-spark-jupyter-spark-sql). We recommend having a cluster with at least four worker nodes and at least 28 Gb of memory in each node. To maximize performance of the cluster, we recommend to change the parameters spark.executor.instances, spark.executor.cores, and spark.executor.memory by following the instructions [here](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apache-spark-resource-manager) and editing the definitions in "custom spark defaults" section.
+4. To run this tutorial with Spark cluster, provision HDInsight cluster by following the instructions [here](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apache-spark-jupyter-spark-sql). We recommend having a cluster with at least four worker nodes and at least 28 Gb of memory in each node. To maximize performance of the cluster, we recommend to change the parameters spark.executor.instances, spark.executor.cores, and spark.executor.memory by following the instructions [here](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apache-spark-resource-manager) and editing the definitions in "custom spark defaults" section. [comment: can you specify what you used?]
 5. Create Azure storage account that is used for storing dataset. You can find instructions for creating storage account [here](https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account).
 
 ## Tutorial Introduction
 
-This tutorial shows how to use Vienna to scale out tuning of hyperparameters of machine learning algorithms that implement scikit-learn API. We show how to configure and use remote docker and Spark cluster as an execution backend for tuning hyperparameters.
+This tutorial shows how to use Vienna [comment:newname] to scale out tuning of hyperparameters of machine learning algorithms that implement scikit-learn API. We show how to configure and use remote docker and Spark cluster as an execution backend for tuning hyperparameters.
 
 ## Use Case Overview
 
@@ -27,7 +27,7 @@ Many machine learning algorithms have one or more knobs, called hyperparameters.
 
 A popular technique for tuning hyperparameters is a *grid search* combined with *cross-validation*. Cross-validation is a technique that assesses how well a model, trained on a training set, predicts over the test set. Using this technique, initially we divide the dataset into K folds and then train the algorithm K times, in a round-robin fashion, on all but one of the folds, called held-out fold. We compute the average value of the metrics of K models over K held-out folds. This average value, called *cross-validated performance estimate*, depends on the values of hyperparameters used when creating K models. When tuning hyperparameters, we search through the space of candidate hyperparameter values to find the ones that optimize cross-validation performance estimate. Grid search is a common search technique, where the space of candidate values of multiple hyperparameters is a cross-product of sets of candidate values of individual hyperparameters. 
 
-Grid search using cross-validation can be time-consuming. If an algorithm has 5 hyperparameters, each with 5 candidate values and we use K=5 folds, then to complete a grid search we need to train 5<sup>6</sup>=15625 models. Fortunately, grid-search using cross-validation is an embarrassingly parallel procedure and all these models can be trained in parallel.
+Grid search using cross-validation can be time-consuming. If an algorithm has 5 hyperparameters, each with 5 candidate values and we use K=5 folds, then to complete a grid search we need to train 5<sup>6</sup>=15625 [some explaination, saying for paramerers there are 5 5<sup>5</sup> possible combination and each will need to train 5 times. ] models. Fortunately, grid-search using cross-validation is an embarrassingly parallel procedure and all these models can be trained in parallel.
 
 ## Data Description
 
@@ -65,7 +65,7 @@ We also use spark-sklearn package to use Spark for distributed tuning of hyperpa
         artifact: "spark-sklearn"
         version: "0.2.0"
 
-In the next steps, we create remote docker and Spark execution environments. Open command line window (CLI) by clicking File menu in the top left corner of AML Workbench and choosing "Open Command Prompt." Then run in CLI
+In the next steps, we create remote docker and Spark execution environments. Open command line window (CLI) by clicking File menu in the top left corner of Azure Machine Learning (AML) Workbench and choosing "Open Command Prompt." Then run in CLI
 
     az login
 
@@ -95,15 +95,17 @@ with the name of the cluster, cluster's SSH user name and password. The default 
 
 ![Cluster name](../Images/cluster_name.png)
 
+[High-lighted AML workbench capabilities?]
+
 ### Data Ingestion
 The code in this tutorial assumes that the data is stored in Azure blob storage. We show initially how to download data from Kaggle site to your computer and upload it to the blob storage. Then we show how to read the data from blob storage. 
 
-To download data from Kaggle, go to [dataset page](https://www.kaggle.com/c/talkingdata-mobile-user-demographics/data) and click Download button. You will be asked to log in to Kaggle. After logging in, you will be redirected back to dataset page. Then download each file in the right column by selecting it and clicking Download button. The total size of seven files in the dataset is 289 Mb. To upload these files to blob storage, create blob storage container 'dataset' in your storage account. You can do that by going to Azure page of your storage account, clicking Blobs and then clicking +Container. Enter 'dataset' as Name and click OK. The following screenshots illustrate these steps:
-
+To download data from Kaggle, go to [dataset page](https://www.kaggle.com/c/talkingdata-mobile-user-demographics/data) and click `Download` button. You will be asked to log in to Kaggle. After logging in, you will be redirected back to dataset page. Then download each file in the right column by selecting it and clicking Download button. The total size of seven files in the dataset is 289 Mb. To upload these files to blob storage, create blob storage container 'dataset' in your storage account. You can do that by going to Azure page of your storage account, clicking `Blob`s and then clicking `+Container`. Enter 'dataset' as `Name` and click `OK`. The following screenshots illustrate these steps:
+[pictures are quite rough, maybe try paint to make it nicer?]
 ![Open blob](../Images/open_blob.png)
 ![Open container](../Images/open_container.png)
 
-After that select dataset container from the list and click Upload button. Azure portal allows to upload multiple files concurrently. In "Upload blob" section click folder button, select all files from the dataset, click Open, and then click Upload. The screenshot below illustrates these steps:
+After that select dataset container from the list and click `Upload` button. Azure portal allows to upload multiple files concurrently. In "Upload blob" section click `Folder` button, select all files from the dataset, click Open, and then click `Upload`. The screenshot below illustrates these steps:
 
 ![Upload blob](../Images/upload_blob.png) 
 
@@ -137,11 +139,11 @@ The code for computing all features is in feature_engineering.py file. We create
 * Fraction of events generated by user in each app (one\_hot\_app_labels function)
 * Fraction of events generated by user in each app label (one\_hot\_app_labels function)
 * Fraction of events generated by user in each app category (text\_category_features function)
-* Indicator features for categories of apps that were used by used to generated events (one\_hot_category function)
+* Indicator features for categories of apps that were used by generated events (one\_hot_category function)
 
 These features were inspired by Kaggle kernel [A linear model on apps and labels](https://www.kaggle.com/dvasyukova/a-linear-model-on-apps-and-labels).
 
-The computation of these features requires significant amount of memory. Initially we tried to compute features in the local environment with 16 Gb RAM. We were able to compute the first four sets of features, but received 'Out of memory' error when computing the fifth feature set. The computation of the first four feature sets is in singleVMsmall.py file and it can be executed in the local environment by running 
+The computation of these features requires significant amount of memory. Initially we tried to compute features in the local environment with 16-GB RAM. We were able to compute the first four sets of features, but received 'Out of memory' error when computing the fifth feature set. The computation of the first four feature sets is in singleVMsmall.py file and it can be executed in the local environment by running 
 
      az ml experiment submit -c local .\singleVMsmall.py   
 
@@ -262,9 +264,11 @@ in CLI windows. This installation takes several minutes. After that we run distr
 
     az ml experiment submit -c spark .\distributed_sweep.py
 
-The results of tuning hyperparameters in Spark cluster, namely logs, best values of hyperparameters and sweeping_results.txt file, can be accessed in Vienna in the same way as in remote DSVM execution. 
+The results of tuning hyperparameters in Spark cluster, namely logs, best values of hyperparameters and sweeping_results.txt file, can be accessed in AML Workbench in the same way as in remote DSVM execution. 
 
 ### Architecture Diagram
+
+[very nice picture! I am not sure if it's remote DSVM or Docker on remote DSVM. From what I know it's Docker on remote DSVM] 
 
 The following diagram shows end-to-end workflow:
 ![architecture](../Images/architecture.png) 
