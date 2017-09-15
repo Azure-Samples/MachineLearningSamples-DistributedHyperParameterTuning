@@ -5,8 +5,8 @@ import re
 def load_data():
 
     # Define storage parameters 
-    ACCOUNT_NAME = "viennatesting"
-    ACCOUNT_KEY = "Gc+sxnQOCpdha3ombGfkzsM3+liy4Wh4mgITTv9+CHrQ+CJHosJZ8VeAEqV/Ufx+hUp60BDcaPRf9axfhuZUPQ=="
+    ACCOUNT_NAME = "<ACCOUNT_NAME>"
+    ACCOUNT_KEY = "<ACCOUNT_KEY>"
     CONTAINER_NAME = "dataset"
 
     # Define blob service     

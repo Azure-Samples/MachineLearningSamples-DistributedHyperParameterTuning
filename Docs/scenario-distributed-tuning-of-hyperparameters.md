@@ -118,7 +118,7 @@ The following code from load_data() function downloads a single file:
     from azure.storage.blob import BlockBlobService
 
     # Define storage parameters 
-    ACCOUNT_NAME = "<ACOOUNT_NAME>"
+    ACCOUNT_NAME = "<ACCOUNT_NAME>"
     ACCOUNT_KEY = "<ACCOUNT_KEY>"
     CONTAINER_NAME = "dataset"
 
@@ -273,16 +273,10 @@ The following diagram shows end-to-end workflow:
 
 In this tutorial, we showed how to use AML Workbench to perform tuning of hyperparameter in remote virtual machine and in remote Spark cluster. We saw that AML Workbench provides tools for easy configuration of execution environments and switching between them. 
 
-## Acknowledgements
-
-We would like to thank Kaggle user dune\_dweller for creating [A linear model on apps and labels](https://www.kaggle.com/dvasyukova/a-linear-model-on-apps-and-labels) kernel. 
-
 ## References
 
 [1] T. Chen and C. Guestrin. [XGBoost: A Scalable Tree Boosting System](https://arxiv.org/abs/1603.02754). KDD 2016.
 
-## Contact
 
-Feel free to contact Dmitry Pechyoni (dmpechyo@microsoft.com) with any question or comment.
 
 
