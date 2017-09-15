@@ -1,9 +1,21 @@
-# Large-scale Hyperparameter Tuning using Azure Machine Learning
+# Distributed Tuning of Hyperparameters 
 
 ## Link of the Gallery GitHub repository
 Following is the link to the public GitHub repository: 
 
-[https://github.com/Azure/MachineLearningSamples-SentimentAnalysis](https://github.com/Azure/MachineLearningSamples-SentimentAnalysis)
+[https://github.com/Azure/MachineLearningSamples-DistributedHyperParameterTuning](https://github.com/Azure/MachineLearningSamples-DistributedHyperParameterTuning)
+
+## Introduction
+
+This scenario shows how to use Azure Machine Learning Workbench to scale out tuning of hyperparameters of machine learning algorithms that implement scikit-learn API. We show how to configure and use remote docker and Spark cluster as an execution backend for tuning hyperparameters.
+
+## Use case overview
+
+Many machine learning algorithms have one or more knobs, called hyperparameters. These knobs allow tuning of algorithms to optimize their performance over future data, measured according to user-specified metrics (for example, accuracy, AUC, RMSE). Data scientist needs to provide values of hyperparameters when building a model over training data and before seeing the future test data. How based on the known training data can we set up the values of hyperparameters so that the model has a good performance over the unknown test data? 
+
+A popular technique for tuning hyperparameters is a *grid search* combined with *cross-validation*. Cross-validation is a technique that assesses how well a model, trained on a training set, predicts over the test set. Using this technique, initially we divide the dataset into K folds and then train the algorithm K times, in a round-robin fashion, on all but one of the folds, called held-out fold. We compute the average value of the metrics of K models over K held-out folds. This average value, called *cross-validated performance estimate*, depends on the values of hyperparameters used when creating K models. When tuning hyperparameters, we search through the space of candidate hyperparameter values to find the ones that optimize cross-validation performance estimate. Grid search is a common search technique, where the space of candidate values of multiple hyperparameters is a cross-product of sets of candidate values of individual hyperparameters. 
+
+Grid search using cross-validation can be time-consuming. If an algorithm has 5 hyperparameters, each with 5 candidate values and we use K=5 folds, then to complete a grid search we need to train 5<sup>6</sup>=15625 models. Fortunately, grid-search using cross-validation is an embarrassingly parallel procedure and all these models can be trained in parallel.
 
 ## Prerequisites
 
@@ -14,26 +26,14 @@ Following is the link to the public GitHub repository:
 5. To run this scenario with Spark cluster, provision HDInsight cluster by following the instructions [here](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apache-spark-jupyter-spark-sql). We recommend having a cluster with at least four worker nodes and at least 28 Gb of memory in each node. To maximize performance of the cluster, we recommend to change the parameters spark.executor.instances, spark.executor.cores, and spark.executor.memory by following the instructions [here](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apache-spark-resource-manager) and editing the definitions in "custom spark defaults" section.
 6. Create Azure storage account that is used for storing dataset. You can find instructions for creating storage account [here](https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account).
 
-## Introduction
-
-This scenario shows how to use Vienna to scale out tuning of hyperparameters of machine learning algorithms that implement scikit-learn API. We show how to configure and use remote docker and Spark cluster as an execution backend for tuning hyperparameters.
-
-## Use Case Overview
-
-Many machine learning algorithms have one or more knobs, called hyperparameters. These knobs allow tuning of algorithms to optimize their performance over future data, measured according to user-specified metrics (for example, accuracy, AUC, RMSE). Data scientist needs to provide values of hyperparameters when building a model over training data and before seeing the future test data. How based on the known training data can we set up the values of hyperparameters so that the model has a good performance over the unknown test data? 
-
-A popular technique for tuning hyperparameters is a *grid search* combined with *cross-validation*. Cross-validation is a technique that assesses how well a model, trained on a training set, predicts over the test set. Using this technique, initially we divide the dataset into K folds and then train the algorithm K times, in a round-robin fashion, on all but one of the folds, called held-out fold. We compute the average value of the metrics of K models over K held-out folds. This average value, called *cross-validated performance estimate*, depends on the values of hyperparameters used when creating K models. When tuning hyperparameters, we search through the space of candidate hyperparameter values to find the ones that optimize cross-validation performance estimate. Grid search is a common search technique, where the space of candidate values of multiple hyperparameters is a cross-product of sets of candidate values of individual hyperparameters. 
-
-Grid search using cross-validation can be time-consuming. If an algorithm has 5 hyperparameters, each with 5 candidate values and we use K=5 folds, then to complete a grid search we need to train 5<sup>6</sup>=15625 models. Fortunately, grid-search using cross-validation is an embarrassingly parallel procedure and all these models can be trained in parallel.
-
-## Data Description
+## Data description
 
 We use [TalkingData dataset](https://www.kaggle.com/c/talkingdata-mobile-user-demographics/data). This dataset has events from the apps in cell phones. The goal is to predict gender and age category of cell phone user given the type of the phone and the events that the user generated recently.  
 
-## Scenario Structure
+## Scenario structure
 This scenario has multiple folders in GitHub repository. Code and configuration files are in **Code** folder, all documentation is in **Docs** folder and all images are **Images** folder. The root folder has README file that contains a brief summary of this scenario.
 
-### Configuration of Execution Environments
+### Configuration of execution environments
 We run our code in remote Docker and in Spark. We also use [scikit-learn](https://anaconda.org/conda-forge/scikit-learn), [xgboost](https://anaconda.org/conda-forge/xgboost), and [azure-storage](https://pypi.python.org/pypi/azure-storage) packages that are not provided in the default Docker container of Azure Machine Learning Workbench. azure-storage package requires installation of [cryptography](https://pypi.python.org/pypi/cryptography) and [azure](https://pypi.python.org/pypi/azure) packages. To install these packages in Docker image and Spark we modify conda_dependencies.yml file:
 
     name: project_environment
@@ -92,7 +92,7 @@ with the name of the cluster, cluster's SSH user name and password. The default 
 
 ![Cluster name](../Images/cluster_name.png)
 
-### Data Ingestion
+### Data ingestion
 The code in this scenario assumes that the data is stored in Azure blob storage. We show initially how to download data from Kaggle site to your computer and upload it to the blob storage. Then we show how to read the data from blob storage. 
 
 To download data from Kaggle, go to [dataset page](https://www.kaggle.com/c/talkingdata-mobile-user-demographics/data) and click Download button. You will be asked to log in to Kaggle. After logging in, you will be redirected back to dataset page. Then download each file in the right column by selecting it and clicking Download button. The total size of seven files in the dataset is 289 Mb. To upload these files to blob storage, create blob storage container 'dataset' in your storage account. You can do that by going to Azure page of your storage account, clicking Blobs and then clicking +Container. Enter 'dataset' as Name and click OK. The following screenshots illustrate these steps:
@@ -125,7 +125,7 @@ The following code from load_data() function downloads a single file:
     # Load blob
     my_service.get_blob_to_path(CONTAINER_NAME, 'app_events.csv.zip', 'app_events.csv.zip')
 
-### Feature Engineering
+### Feature engineering
 The code for computing all features is in feature_engineering.py file. We create multiple feature sets:
 * One-hot encoding of brand and model of the cell phone (one\_hot\_brand_model function)
 * Fraction of events generated by user in each weekday (weekday\_hour_features function)
@@ -146,7 +146,7 @@ in CLI window.
 
 Since local environment is too small for computing all feature sets, we switch to remote DSVM that has larger memory. The execution inside DSVM is done inside Docker container that is managed by AML Workbench. Using this DSVM we are able to compute all features and train models and tune hyperparameters (see the next section). singleVM.py file has complete feature computation and modeling code. In the next section, we will show how to run singleVM.py in remote DSVM. 
 
-### Tuning Hyperparameters using Remote DSVM
+### Tuning hyperparameters using remote DSVM
 We use [xgboost](https://anaconda.org/conda-forge/xgboost) implementation [1] of gradient tree boosting. We use [scikit-learn](http://scikit-learn.org/) package to tune hyperparameters of xgboost. Although xgboost is not part of scikit-learn package, it implements scikit-learn API and hence can be used together with hyperparameter tuning functions of scikit-learn. 
 
 Xgboost has eight hyperparameters:
@@ -225,7 +225,7 @@ In the top right corner of Run Properties window there is a section Output Files
     mean: -2.28530, std: 0.03927, params: {'colsample_bytree': 1, 'learning_rate': 0.1, 'subsample': 0.5, 'n_estimators': 400, 'reg_alpha': 1, 'objective': 'multi:softprob', 'colsample_bylevel': 0.1, 'reg_lambda': 1, 'max_depth': 4}
     mean: -2.28513, std: 0.03986, params: {'colsample_bytree': 1, 'learning_rate': 0.1, 'subsample': 0.5, 'n_estimators': 500, 'reg_alpha': 1, 'objective': 'multi:softprob', 'colsample_bylevel': 0.1, 'reg_lambda': 1, 'max_depth': 4}
 
-### Tuning Hyperparameters using Spark Cluster.
+### Tuning hyperparameters using Spark cluster
 We use Spark cluster to scale out tuning hyperparameters and use larger grid. Our new grid is
 
     tuned_parameters = [{'n_estimators': [300,400,500,600,700], 'max_depth': [4], 'objective': ['multi:softprob'], 'reg_alpha': [1], 'reg_lambda': [1], 'colsample_bytree': [1], 'learning_rate': [0.1], 'colsample_bylevel': [0.01, 0.1, 0.5, 1], 'subsample': [0.5, 0.6, 0.7, 0.8, 0.9, 1]}]
@@ -259,25 +259,21 @@ in CLI windows. This installation takes several minutes. After that we run distr
 
     az ml experiment submit -c spark .\distributed_sweep.py
 
-The results of tuning hyperparameters in Spark cluster, namely logs, best values of hyperparameters and sweeping_results.txt file, can be accessed in Vienna in the same way as in remote DSVM execution. 
+The results of tuning hyperparameters in Spark cluster, namely logs, best values of hyperparameters and sweeping_results.txt file, can be accessed in Azure Machine Learning Workbench in the same way as in remote DSVM execution. 
 
-### Architecture Diagram
+### Architecture diagram
 
 The following diagram shows end-to-end workflow:
 ![architecture](../Images/architecture.png) 
 
 ## Conclusion 
 
-In this scenario, we showed how to use AML Workbench to perform tuning of hyperparameter in remote virtual machine and in remote Spark cluster. We saw that AML Workbench provides tools for easy configuration of execution environments and switching between them. 
+In this scenario, we showed how to use Azure Machine Learning Workbench to perform tuning of hyperparameter in remote virtual machine and in remote Spark cluster. We saw that Azure Machine Learning Workbench provides tools for easy configuration of execution environments and switching between them. 
 
 ## References
 
 [1] T. Chen and C. Guestrin. [XGBoost: A Scalable Tree Boosting System](https://arxiv.org/abs/1603.02754). KDD 2016.
 
 
-<<<<<<< HEAD
 
 
-=======
-Feel free to contact Dmitry Pechyoni (dmpechyo@microsoft.com) with any question or comment.
->>>>>>> katherinelin
