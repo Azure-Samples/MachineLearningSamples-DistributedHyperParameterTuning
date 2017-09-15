@@ -1,4 +1,17 @@
-# Distributed Tuning of Hyperparameters 
+---
+title: Distributed Tuning of Hyperparameters using Azure Machine Learning Workbench | Microsoft Docs
+description: This scenario shows how to do distributed tuning of hyperparameters using Azure Machine Learning Workbench
+services: machine-learning
+author: pechyony
+
+ms.service: machine-learning
+ms.topic: article
+ms.date: 09/13/2017
+ms.author: pechyony
+
+---
+
+# Distributed Tuning of Hyperparameters using Azure Machine Learning Workbench
 
 ## Link of the Gallery GitHub repository
 Following is the link to the public GitHub repository: 
