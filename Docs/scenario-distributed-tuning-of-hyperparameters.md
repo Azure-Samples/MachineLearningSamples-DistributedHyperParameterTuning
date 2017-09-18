@@ -20,7 +20,7 @@ Following is the link to the public GitHub repository:
 
 ## Introduction
 
-This scenario shows how to use Azure Machine Learning Workbench to scale out tuning of hyperparameters of machine learning algorithms that implement scikit-learn API. We show how to configure and use remote docker and Spark cluster as an execution backend for tuning hyperparameters.
+This scenario shows how to use Azure Machine Learning Workbench to scale out tuning of hyperparameters of machine learning algorithms that implement scikit-learn API. We show how to configure and use remote Docker container and Spark cluster as an execution backend for tuning hyperparameters.
 
 ## Use case overview
 
@@ -35,7 +35,7 @@ Grid search using cross-validation can be time-consuming. If an algorithm has 5 
 * An [Azure account](https://azure.microsoft.com/en-us/free/) (free trials are available).
 * An installed copy of [Azure Machine Learning Workbench](./overview-what-is-azure-ml.md) following the [quick start installation guide](./quick-start-installation.md) to install the program and create a workspace.
 * This scenario assumes that you are running Azure ML Workbench on Windows 10 or MacOS with Docker engine locally installed. 
-* To run scenario with remote docker, provision Ubuntu Data Science Virtual Machine (DSVM) by following the instructions [here](https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-data-science-provision-vm). We recommend using a virtual machine with at least 8 cores and 28 Gb of memory.
+* To run scenario with remote Docker container, provision Ubuntu Data Science Virtual Machine (DSVM) by following the instructions [here](https://docs.microsoft.com/en-us/azure/machine-learning/machine-learning-data-science-provision-vm). We recommend using a virtual machine with at least 8 cores and 28 Gb of memory.
 * To run this scenario with Spark cluster, provision HDInsight cluster by following the instructions [here](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apache-spark-jupyter-spark-sql). We recommend having a cluster with at least four worker nodes and at least 28 Gb of memory in each node. To maximize performance of the cluster, we recommend to change the parameters spark.executor.instances, spark.executor.cores, and spark.executor.memory by following the instructions [here](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apache-spark-resource-manager) and editing the definitions in "custom spark defaults" section.
 * Create Azure storage account that is used for storing dataset. You can find instructions for creating storage account [here](https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account).
 
@@ -47,12 +47,12 @@ We use [TalkingData dataset](https://www.kaggle.com/c/talkingdata-mobile-user-de
 This scenario has multiple folders in GitHub repository. Code and configuration files are in **Code** folder, all documentation is in **Docs** folder and all images are **Images** folder. The root folder has README file that contains a brief summary of this scenario.
 
 ### Getting started
-Click on Azure Machine Learning Workbench icon to run Azure Machine Learning Workbench and create a blank project. You can find detailed instructions on how to create a new project in  [Quick Start Tutorial](./quick-start-iris.md).   
+Click on Azure Machine Learning Workbench icon to run Azure Machine Learning Workbench and create project from "Distributed Tuning of Hyperparameters" template. You can find detailed instructions on how to create a new project in  [Quick Start Tutorial](./quick-start-iris.md).   
 
 ### Configuration of execution environments
-We show how to run our code in remote docker and in Spark. We start with the description of the settings that are common to both environments. 
+We show how to run our code in remote Docker container and in Spark cluster. We start with the description of the settings that are common to both environments. 
 
-We use [scikit-learn](https://anaconda.org/conda-forge/scikit-learn), [xgboost](https://anaconda.org/conda-forge/xgboost), and [azure-storage](https://pypi.python.org/pypi/azure-storage) packages that are not provided in the default Docker container of Azure Machine Learning Workbench. azure-storage package requires installation of [cryptography](https://pypi.python.org/pypi/cryptography) and [azure](https://pypi.python.org/pypi/azure) packages. To install these packages in Docker image and Spark we modify conda_dependencies.yml file:
+We use [scikit-learn](https://anaconda.org/conda-forge/scikit-learn), [xgboost](https://anaconda.org/conda-forge/xgboost), and [azure-storage](https://pypi.python.org/pypi/azure-storage) packages that are not provided in the default Docker container of Azure Machine Learning Workbench. azure-storage package requires installation of [cryptography](https://pypi.python.org/pypi/cryptography) and [azure](https://pypi.python.org/pypi/azure) packages. To install these packages in Docker image and in the nodes of Spark cluster, we modify conda_dependencies.yml file:
 
     name: project_environment
     channels:
@@ -66,7 +66,7 @@ We use [scikit-learn](https://anaconda.org/conda-forge/scikit-learn), [xgboost](
         - azure
         - azure-storage
 
-The modified conda\_dependencies.yml file can be downloaded from [here](https://github.com/Azure/MachineLearningSamples-DistributedHyperParameterTuning/blob/master/Code/aml_config/conda_dependencies.yml) and copied into aml_config directory of your project. 
+The modified conda\_dependencies.yml file is stored in aml_config directory of tutorial. 
 
 In the next steps, we connect execution environment to Azure account. Open command line window (CLI) by clicking File menu in the top left corner of AML Workbench and choosing "Open Command Prompt." Then run in CLI
 
@@ -88,9 +88,9 @@ to complete the connection to your Azure subscription.
 
 In the next two sections we show how to complete configuration of remote docker and Spark cluster.
 
-#### Configuration of remote docker
+#### Configuration of remote Docker container
 
- To set up a remote docker environment, run in CLI
+ To set up a remote Docker container, run in CLI
 
     az ml computetarget attach --name dsvm --address <IP address> --username <username> --password <password> --type remotedocker
 
@@ -122,7 +122,7 @@ We use spark-sklearn package to have Spark as an execution environment for distr
         artifact: "spark-sklearn"
         version: "0.2.0"
 
-The modified spark\_dependencies.yml file can be downloaded from [here](https://github.com/Azure/MachineLearningSamples-DistributedHyperParameterTuning/blob/master/Code/aml_config/conda_dependencies.yml) and copied into aml_config directory of your project. 
+The modified spark\_dependencies.yml file is stored in aml_config directory of tutorial. 
 
 ### Data ingestion
 The code in this scenario assumes that the data is stored in Azure blob storage. We show initially how to download data from Kaggle site to your computer and upload it to the blob storage. Then we show how to read the data from blob storage. 
