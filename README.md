@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This scenario shows how to use Azure Machine Learning Workbench to scale out tuning of hyperparameters of machine learning algorithms that implement scikit-learn API. We show how to configure and use remote docker and Spark cluster as an execution backend for tuning hyperparameters.
+This scenario shows how to use Azure Machine Learning Workbench to scale out tuning of hyperparameters of machine learning algorithms that implement scikit-learn API. We show how to configure and use remote docker and Spark cluster as an execution backend for tuning hyperparameters. A full documentation for this tutorial is available [here](https://github.com/Azure/MachineLearningSamples-DistributedHyperParameterTuning/blob/master/Docs/scenario-distributed-tuning-of-hyperparameters.md).
 
 ## Use case overview
 

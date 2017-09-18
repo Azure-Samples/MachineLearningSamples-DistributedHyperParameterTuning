@@ -54,7 +54,7 @@ y_train = targetencoder.transform(gender_age_train['group'])
 # Training
 #######################################################
 
-tuned_parameters = [{'n_estimators': [300,500,700], 'max_depth': [4], 'objective': ['multi:softprob'], 
+tuned_parameters = [{'n_estimators': [300,400], 'max_depth': [3,4], 'objective': ['multi:softprob'], 
                      'reg_alpha': [1], 'reg_lambda': [1], 'colsample_bytree': [1],
                      'learning_rate': [0.1], 'colsample_bylevel': [0.01,0.1], 
                      'subsample': [0.5,0.7]}]                                                            

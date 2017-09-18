@@ -46,8 +46,13 @@ We use [TalkingData dataset](https://www.kaggle.com/c/talkingdata-mobile-user-de
 ## Scenario structure
 This scenario has multiple folders in GitHub repository. Code and configuration files are in **Code** folder, all documentation is in **Docs** folder and all images are **Images** folder. The root folder has README file that contains a brief summary of this scenario.
 
+### Getting started
+Click on Azure Machine Learning Workbench icon to run Azure Machine Learning Workbench and create a blank project. You can find detailed instructions on how to create a new project in  [Quick Start Tutorial](./quick-start-iris.md).   
+
 ### Configuration of execution environments
-We run our code in remote Docker and in Spark. We also use [scikit-learn](https://anaconda.org/conda-forge/scikit-learn), [xgboost](https://anaconda.org/conda-forge/xgboost), and [azure-storage](https://pypi.python.org/pypi/azure-storage) packages that are not provided in the default Docker container of Azure Machine Learning Workbench. azure-storage package requires installation of [cryptography](https://pypi.python.org/pypi/cryptography) and [azure](https://pypi.python.org/pypi/azure) packages. To install these packages in Docker image and Spark we modify conda_dependencies.yml file:
+We show how to run our code in remote docker and in Spark. We start with the description of the settings that are common to both environments. 
+
+We use [scikit-learn](https://anaconda.org/conda-forge/scikit-learn), [xgboost](https://anaconda.org/conda-forge/xgboost), and [azure-storage](https://pypi.python.org/pypi/azure-storage) packages that are not provided in the default Docker container of Azure Machine Learning Workbench. azure-storage package requires installation of [cryptography](https://pypi.python.org/pypi/cryptography) and [azure](https://pypi.python.org/pypi/azure) packages. To install these packages in Docker image and Spark we modify conda_dependencies.yml file:
 
     name: project_environment
     channels:
@@ -61,21 +66,9 @@ We run our code in remote Docker and in Spark. We also use [scikit-learn](https:
         - azure
         - azure-storage
 
-We also use spark-sklearn package to use Spark for distributed tuning of hyperparameters. We modified spark_dependencies.yml file to install this package when Spark execution environment is used:
+The modified conda\_dependencies.yml file can be downloaded from [here](https://github.com/Azure/MachineLearningSamples-DistributedHyperParameterTuning/blob/master/Code/aml_config/conda_dependencies.yml) and copied into aml_config directory of your project. 
 
-    configuration: {}
-    repositories:
-      - "https://mmlspark.azureedge.net/maven"
-      - "https://spark-packages.org/packages"
-    packages:
-      - group: "com.microsoft.ml.spark"
-        artifact: "mmlspark_2.11"
-        version: "0.7"
-      - group: "databricks"
-        artifact: "spark-sklearn"
-        version: "0.2.0"
-
-In the next steps, we create remote docker and Spark execution environments. Open command line window (CLI) by clicking File menu in the top left corner of AML Workbench and choosing "Open Command Prompt." Then run in CLI
+In the next steps, we connect execution environment to Azure account. Open command line window (CLI) by clicking File menu in the top left corner of AML Workbench and choosing "Open Command Prompt." Then run in CLI
 
     az login
 
@@ -91,12 +84,22 @@ and find the subscription ID of Azure subscription that has your AML Workbench W
 
     az account set -s <subscription ID>
 
-to complete the connection to your Azure subscription. At this point, we are ready to create remote docker and Spark environments. To set up a remote docker environment, run in CLI
+to complete the connection to your Azure subscription.
+
+In the next two sections we show how to complete configuration of remote docker and Spark cluster.
+
+#### Configuration of remote docker
+
+ To set up a remote docker environment, run in CLI
 
     az ml computetarget attach --name dsvm --address <IP address> --username <username> --password <password> --type remotedocker
 
 with IP address, user name and password in DSVM. IP address of DSVM can be found in Overview section of your DSVM page in Azure portal:
-![VM IP](media/scenario-distributed-tuning-of-hyperparameters/vm_ip.png)
+
+![VM IP](../Images/vm_ip.png)
+
+#### Configuration of Spark cluster
+
 To set up Spark environment, run in CLI
 
     az ml computetarget attach --name spark --address <cluster name>-ssh.azurehdinsight.net  --username <username> --password <password> --type cluster
@@ -105,10 +108,26 @@ with the name of the cluster, cluster's SSH user name and password. The default 
 
 ![Cluster name](../Images/cluster_name.png)
 
+We use spark-sklearn package to have Spark as an execution environnment for distributed tuning of hyperparameters. We modified spark_dependencies.yml file to install this package when Spark execution environment is used:
+
+    configuration: {}
+    repositories:
+      - "https://mmlspark.azureedge.net/maven"
+      - "https://spark-packages.org/packages"
+    packages:
+      - group: "com.microsoft.ml.spark"
+        artifact: "mmlspark_2.11"
+        version: "0.7"
+      - group: "databricks"
+        artifact: "spark-sklearn"
+        version: "0.2.0"
+
+The modified spark\_dependencies.yml file can be downloaded from [here](https://github.com/Azure/MachineLearningSamples-DistributedHyperParameterTuning/blob/master/Code/aml_config/conda_dependencies.yml) and copied into aml_config directory of your project. 
+
 ### Data ingestion
 The code in this scenario assumes that the data is stored in Azure blob storage. We show initially how to download data from Kaggle site to your computer and upload it to the blob storage. Then we show how to read the data from blob storage. 
 
-To download data from Kaggle, go to [dataset page](https://www.kaggle.com/c/talkingdata-mobile-user-demographics/data) and click Download button. You will be asked to log in to Kaggle. After logging in, you will be redirected back to dataset page. Then download each file in the right column by selecting it and clicking Download button. The total size of seven files in the dataset is 289 Mb. To upload these files to blob storage, create blob storage container 'dataset' in your storage account. You can do that by going to Azure page of your storage account, clicking Blobs and then clicking +Container. Enter 'dataset' as Name and click OK. The following screenshots illustrate these steps:
+To download data from Kaggle, go to [dataset page](https://www.kaggle.com/c/talkingdata-mobile-user-demographics/data) and click Download button. You will be asked to log in to Kaggle. After logging in, you will be redirected back to dataset page. Then download the first seven files in the left column by selecting them and clicking Download button. The total size of the downloaded files is 289 Mb. To upload these files to blob storage, create blob storage container 'dataset' in your storage account. You can do that by going to Azure page of your storage account, clicking Blobs and then clicking +Container. Enter 'dataset' as Name and click OK. The following screenshots illustrate these steps:
 
 ![Open blob](../Images/open_blob.png)
 ![Open container](../Images/open_container.png)
@@ -138,8 +157,12 @@ The following code from load_data() function downloads a single file:
     # Load blob
     my_service.get_blob_to_path(CONTAINER_NAME, 'app_events.csv.zip', 'app_events.csv.zip')
 
+Notice that you do not need to run load_data.py file manually. Later on it will be called from other files.
+
 ### Feature engineering
-The code for computing all features is in feature_engineering.py file. We create multiple feature sets:
+The code for computing all features is in feature\_engineering.py file. You do not need to run feature_engineering.py file manually. Later on it will be called from other files.
+
+We create multiple feature sets:
 * One-hot encoding of brand and model of the cell phone (one\_hot\_brand_model function)
 * Fraction of events generated by user in each weekday (weekday\_hour_features function)
 * Fraction of events generated by user in each hour (weekday\_hour_features function)
@@ -175,9 +198,9 @@ Xgboost has eight hyperparameters:
 A description of these hyperparameters can be found [here](http://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn) and [here](https://github.com/dmlc/xgboost/blob/master/doc/parameter.md). 
 Initially we use remote DSVM and tune hyperparameters from a small grid of candidate values:
 
-    tuned_parameters = [{'n_estimators': [400,500], 'max_depth': [4], 'objective': ['multi:softprob'], 'reg_alpha': [1], 'reg_lambda': [1], 'colsample_bytree': [1],'learning_rate': [0.1], 'colsample_bylevel': [0.1,1], 'subsample': [0.5,1]}]  
+    tuned_parameters = [{'n_estimators': [300,400], 'max_depth': [3,4], 'objective': ['multi:softprob'], 'reg_alpha': [1], 'reg_lambda': [1], 'colsample_bytree': [1],'learning_rate': [0.1], 'colsample_bylevel': [0.1,], 'subsample': [0.5]}]  
 
-This grid has eight combinations of values of hyperparameters. We use 5-fold cross validation, resulting 8x5=40 runs of xgboost. To measure performance of the models, we use negative log loss metric. The following code finds the values of hyperparameters from the grid that maximize the cross-validated negative log loss. The code also uses these values to train the final model over the full training set:
+This grid has four combinations of values of hyperparameters. We use 5-fold cross validation, resulting 4x5=20 runs of xgboost. To measure performance of the models, we use negative log loss metric. The following code finds the values of hyperparameters from the grid that maximize the cross-validated negative log loss. The code also uses these values to train the final model over the full training set:
 
     clf = XGBClassifier(seed=0)
     metric = 'neg_log_loss'
@@ -220,7 +243,7 @@ in CLI windows. Creation of Docker container takes several minutes. After that w
 
     az ml experiment submit -c dsvm .\singleVM.py
 
-The logged values can be viewed in Run History window of AML Workbench:
+This command finishes in 1 hour 38 minutes when DSVM has 8 cores and 28 Gb of memory. The logged values can be viewed in Run History window of AML Workbench:
 
 ![run history](../Images/run_history.png)
 
@@ -233,17 +256,17 @@ The chosen values of hyperparameters can also be examined in Run Properties wind
 In the top right corner of Run Properties window there is a section Output Files with the list of all files that were created in '.\output' folder in the execution environment. sweeping\_results.txt can be downloaded from there by selecting it and clicking Download button. sweeping_results.txt should have the following output:
 
     metric =  neg_log_loss
+    mean: -2.29096, std: 0.03748, params: {'colsample_bytree': 1, 'learning_rate': 0.1, 'subsample': 0.5, 'n_estimators': 300, 'reg_alpha': 1, 'objective': 'multi:softprob', 'colsample_bylevel': 0.1, 'reg_lambda': 1, 'max_depth': 3}
     mean: -2.28712, std: 0.03822, params: {'colsample_bytree': 1, 'learning_rate': 0.1, 'subsample': 0.5, 'n_estimators': 400, 'reg_alpha': 1, 'objective': 'multi:softprob', 'colsample_bylevel': 0.1, 'reg_lambda': 1, 'max_depth': 3}
-    mean: -2.28512, std: 0.03861, params: {'colsample_bytree': 1, 'learning_rate': 0.1, 'subsample': 0.5, 'n_estimators': 500, 'reg_alpha': 1, 'objective': 'multi:softprob', 'colsample_bylevel': 0.1, 'reg_lambda': 1, 'max_depth': 3}
+    mean: -2.28706, std: 0.03863, params: {'colsample_bytree': 1, 'learning_rate': 0.1, 'subsample': 0.5, 'n_estimators': 300, 'reg_alpha': 1, 'objective': 'multi:softprob', 'colsample_bylevel': 0.1, 'reg_lambda': 1, 'max_depth': 4}
     mean: -2.28530, std: 0.03927, params: {'colsample_bytree': 1, 'learning_rate': 0.1, 'subsample': 0.5, 'n_estimators': 400, 'reg_alpha': 1, 'objective': 'multi:softprob', 'colsample_bylevel': 0.1, 'reg_lambda': 1, 'max_depth': 4}
-    mean: -2.28513, std: 0.03986, params: {'colsample_bytree': 1, 'learning_rate': 0.1, 'subsample': 0.5, 'n_estimators': 500, 'reg_alpha': 1, 'objective': 'multi:softprob', 'colsample_bylevel': 0.1, 'reg_lambda': 1, 'max_depth': 4}
 
 ### Tuning hyperparameters using Spark cluster
 We use Spark cluster to scale out tuning hyperparameters and use larger grid. Our new grid is
 
-    tuned_parameters = [{'n_estimators': [300,400,500,600,700], 'max_depth': [4], 'objective': ['multi:softprob'], 'reg_alpha': [1], 'reg_lambda': [1], 'colsample_bytree': [1], 'learning_rate': [0.1], 'colsample_bylevel': [0.01, 0.1, 0.5, 1], 'subsample': [0.5, 0.6, 0.7, 0.8, 0.9, 1]}]
+    tuned_parameters = [{'n_estimators': [300,400], 'max_depth': [3,4], 'objective': ['multi:softprob'], 'reg_alpha': [1], 'reg_lambda': [1], 'colsample_bytree': [1], 'learning_rate': [0.1], 'colsample_bylevel': [0.01, 0.1], 'subsample': [0.5, 0.7]}]
 
-This grid has 120 combinations of values of hyperparameters. Since we use 5-fold cross validation, we run xgboost 120x5=600 times.
+This grid has 16 combinations of values of hyperparameters. Since we use 5-fold cross validation, we run xgboost 16x5=80 times.
 
 scikit-learn package does not have a native support of tuning hyperparameters using Spark cluster. Fortunately, [spark-sklearn](https://spark-packages.org/package/databricks/spark-sklearn) package from Databricks fills this gap. This package provides GridSearchCV function that has almost the same API as GridSearchCV function in scikit-learn. To use spark-sklearn and tune hyperparameters using Spark we need to connect to create Spark context
 
@@ -272,7 +295,7 @@ in CLI windows. This installation takes several minutes. After that we run distr
 
     az ml experiment submit -c spark .\distributed_sweep.py
 
-The results of tuning hyperparameters in Spark cluster, namely logs, best values of hyperparameters and sweeping_results.txt file, can be accessed in Azure Machine Learning Workbench in the same way as in remote DSVM execution. 
+This command finishes in 1 hour 6 minutes when Spark cluster has 6 worker nodes with 28 Gb of memory. The results of tuning hyperparameters in Spark cluster, namely logs, best values of hyperparameters and sweeping_results.txt file, can be accessed in Azure Machine Learning Workbench in the same way as in remote DSVM execution. 
 
 ### Architecture diagram
 
