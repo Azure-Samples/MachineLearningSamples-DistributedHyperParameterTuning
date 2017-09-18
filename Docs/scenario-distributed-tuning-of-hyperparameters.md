@@ -108,7 +108,7 @@ with the name of the cluster, cluster's SSH user name and password. The default 
 
 ![Cluster name](../Images/cluster_name.png)
 
-We use spark-sklearn package to have Spark as an execution environnment for distributed tuning of hyperparameters. We modified spark_dependencies.yml file to install this package when Spark execution environment is used:
+We use spark-sklearn package to have Spark as an execution environment for distributed tuning of hyperparameters. We modified spark_dependencies.yml file to install this package when Spark execution environment is used:
 
     configuration: {}
     repositories:
@@ -247,7 +247,7 @@ This command finishes in 1 hour 38 minutes when DSVM has 8 cores and 28 Gb of me
 
 ![run history](../Images/run_history.png)
 
-By default Run History window shows values and graphs of the first 1-2 logged values. To see the full list of the chosen values of hyperparameters, click on the settings icon marked with red circle in the above screenshot and select the hyperparameters to be shown in the table. Also, to select the graphs that are shown in the top part of Run History window, click on the setting icon marked with blue circle and select the graphs from the list. 
+By default Run History window shows values and graphs of the first 1-2 logged values. To see the full list of the chosen values of hyperparameters, click on the settings icon marked with red circle in the previous screenshot and select the hyperparameters to be shown in the table. Also, to select the graphs that are shown in the top part of Run History window, click on the setting icon marked with blue circle and select the graphs from the list. 
 
 The chosen values of hyperparameters can also be examined in Run Properties window: 
 
