@@ -237,7 +237,7 @@ This file is stored in a special ./outputs directory. Later on we show how to do
 
  Before running singleVM.py in remote DSVM for the first time, we create a Docker container there by running 
 
-    az experiment prepare --run-configuration dsvm
+    az ml experiment prepare -c dsvm
 
 in CLI windows. Creation of Docker container takes several minutes. After that we run singleVM.py in DSVM:
 
@@ -289,7 +289,7 @@ The final code for tuning hyperparameters using Spark is in distributed\_sweep.p
 
 Before running distributed_sweep.py in Spark cluster for the first time, we need to install Python packages there. This can be achieved by running 
 
-    az experiment prepare --run-configuration spark
+    az ml experiment prepare -c spark
 
 in CLI windows. This installation takes several minutes. After that we run distributed_sweep.py in Spark cluster:
 
