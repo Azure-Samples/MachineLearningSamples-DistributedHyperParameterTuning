@@ -3,7 +3,7 @@ from load_data import load_data
 
 if __name__ == "__main__":
 
-    load_data()
+    app_events, app_labels, events, gender_age_train, gender_age_test, label_categories, brand_model = load_data()
 
     #################################################################
     # Feature engineering
