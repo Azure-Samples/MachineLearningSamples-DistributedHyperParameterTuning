@@ -426,7 +426,7 @@ The final code for tuning hyperparameters using Spark is in distributed\_sweep.p
 ## Architecture diagram
 
 The following diagram shows end-to-end workflow:
-![architecture](../Images/architecture.PNG) 
+![architecture](../Images/architecture.png) 
 
 
 <a name="conclusion"></a>
