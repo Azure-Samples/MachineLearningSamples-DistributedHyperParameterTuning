@@ -194,12 +194,14 @@ We recommend creating a HDInsight Spark cluster to train, evaluate, and apply th
 
 <a name="useamlworkbench"></a>
 ## Model Tuning with Azure Machine Learning (AML) Workbench
+This section mainly outline the step-by-step instructions on how to perform the modeling tuning exercise using AML Workbench. In order to further understand how the machine learning tasks are implemented and why the experiments are performed in such as way, please refer to section [Extended Reading](#details) for details.
+
 We recommend to clone, or download/extract, a copy of [this git repository](https://github.com/Azure/MachineLearningSamples-DistributedHyperParameterTuning) in order to conveniently refer to the files in the [Code](https://github.com/Azure/MachineLearningSamples-DistributedHyperParameterTuning/Code) folder.
 
 We define the 
-"Code" folder of your copy of [this git repository](https://github.com/Azure/MachineLearningSamples-DistributedHyperParameterTuning) as "**origin code**" folder; and the name of your new AML Workbench project folder as "**your project**" folder.
+"Code" folder in your copy of [this git repository](https://github.com/Azure/MachineLearningSamples-DistributedHyperParameterTuning) as "**origin code**" folder; and the name of your new created AML Workbench project folder as "**your project**" folder. Blew section shows how this new project is created.
 
-This section mainly outline the step-by-step instructions on how to perform the modeling tuning exercise using AML Workbench. In order to further understand how the machine learning tasks are implemented and why the experiments are performed in such as way, please refer to section [Extended Reading](#details) for details.
+
 
 <a name="createproj"></a>
 ### Create a New Project
@@ -308,7 +310,7 @@ In the top right corner of Run Properties window there is a section Output Files
       	  version: "0.2.0"
 
 <a name="details"></a>
-##Extended Reading
+## Extended Reading
 This section is for further understanding the machine learning process. It is not required in order to finish the model turning exercise.
 
 <a name="featurnengineering"></a>
