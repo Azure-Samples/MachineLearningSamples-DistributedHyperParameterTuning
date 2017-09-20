@@ -194,7 +194,7 @@ We recommend creating a HDInsight Spark cluster to train, evaluate, and apply th
 
 <a name="useamlworkbench"></a>
 ## Model Tuning with Azure Machine Learning (AML) Workbench
-This section mainly outline the step-by-step instructions on how to perform the modeling tuning exercise using AML Workbench. In order to further understand how the machine learning tasks are implemented and why the experiments are performed in such as way, please refer to section [Extended Reading](#details) for details.
+This section mainly outlines the step-by-step instructions on how to perform the modeling tuning exercise using AML Workbench. In order to further understand how the machine learning tasks are implemented and why the experiments are performed in such as way, please refer to section [Extended Reading](#details) for details.
 
 We recommend to clone, or download/extract, a copy of [this git repository](https://github.com/Azure/MachineLearningSamples-DistributedHyperParameterTuning) in order to conveniently refer to the files in the [Code](https://github.com/Azure/MachineLearningSamples-DistributedHyperParameterTuning/Code) folder.
 
@@ -222,7 +222,7 @@ Following steps show how to configure the settings in AML Workbench:
 		> az account set -s <subscription ID>
 
 1. Copy all the .py files from the origin code folder to your project folder. 
-1. Locate the load\data.py file in your project folder and open it. As shown below, replace the ACCOUNT_NAME and ACCOUNT_KEY variable with your provisioned storage account name and key. Save and close this file. Notice that you do not need to run load\_data.py file manually. Later on it will be called from other files.
+1. Locate the load\_data.py file in your project folder and open it. As shown below, replace the ACCOUNT_NAME and ACCOUNT_KEY variable with your provisioned storage account name and key. Save and close this file. Notice that you do not need to run load\_data.py file manually. Later on it will be called from other files.
 		
 		from azure.storage.blob import BlockBlobService
     	# Define storage parameters 
