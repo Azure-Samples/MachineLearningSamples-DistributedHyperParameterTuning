@@ -3,7 +3,7 @@
 ## Link to the Microsoft DOCS site
 
 The detailed documentation for this real world scenario includes the step-by-step walkthrough:
-[https://docs.microsoft.com/en-us/azure/machine-learning/preview/scenario-distributed-tuning-of-hyperparameters](https://docs.microsoft.com/en-us/azure/machine-learning/preview/scenario-distributed-tuning-of-hyperparameters).
+[https://docs.microsoft.com/azure/machine-learning/preview/scenario-distributed-tuning-of-hyperparameters](https://docs.microsoft.com/azure/machine-learning/preview/scenario-distributed-tuning-of-hyperparameters).
 
 
 ## Link to the Gallery GitHub repository
