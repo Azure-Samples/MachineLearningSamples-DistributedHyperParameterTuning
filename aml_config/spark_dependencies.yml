@@ -6,7 +6,13 @@
 
 # For third-party python libraries, see conda_dependencies.yml.
 
-configuration: {}
+configuration: 
+  #"spark.driver.cores": "8"
+  #"spark.driver.memory": "5200m"
+  #"spark.executor.instances": "128"
+  #"spark.executor.memory": "5200m"  
+  #"spark.executor.cores": "2"
+  
 repositories:
   - "https://mmlspark.azureedge.net/maven"
   - "https://spark-packages.org/packages"
