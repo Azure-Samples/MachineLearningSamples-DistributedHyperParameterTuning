@@ -1,7 +1,12 @@
 import feature_engineering as fe
 from load_data import load_data
+from azureml.logging import get_azureml_logger
 
 if __name__ == "__main__":
+
+    # initialize logger
+    run_logger = get_azureml_logger()
+    run_logger.log(“amlrealworld.distributed-tuning.singlevm-small”,”true”)
 
     app_events, app_labels, events, gender_age_train, gender_age_test, label_categories, brand_model = load_data()
 

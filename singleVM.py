@@ -14,6 +14,7 @@ app_events, app_labels, events, gender_age_train, gender_age_test, label_categor
 
 # initialize logger
 run_logger = get_azureml_logger()
+run_logger.log(“amlrealworld.distributed-tuning.single-vm”,”true”)
 
 # default temporary library of joblib is too small, change it
 os.environ["JOBLIB_TEMP_FOLDER"] = "/tmp"
