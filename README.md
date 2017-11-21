@@ -27,6 +27,10 @@ This scenario shows how to use Azure Machine Learning Workbench to scale out tun
 * Spark HDInsight cluster. We recommend having a cluster with at least 4 worker nodes and at least 28 Gb of memory in each node. 
 * Azure storage account. 
 
+# Data/Telemetry
+
+This tutorial collects usage data and sends it to Microsoft to help improve our products and services. Read our [privacy statement](http://go.microsoft.com/fwlink/?LinkId=521839) to learn more. 
+
 # Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
